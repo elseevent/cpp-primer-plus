@@ -1,14 +1,29 @@
+BUILD_PATH=../../build
+ARTIFACT_PATH=$(BUILD_PATH)/hash-factory
+objects=$(ARTIFACT_PATH)/HashAlgorithmFactory.o $(ARTIFACT_PATH)/main.o
 
-objects=HashAlgorithmFactory.o main.o  
+$(ARTIFACT_PATH)/main.out:check $(objects)
+	g++ -o $(ARTIFACT_PATH)/main.out $(objects)
+	@echo "COMPILER DONE!"
 
-main.out:$(objects)  
-	g++ -o main.out $(objects)
+$(ARTIFACT_PATH)/HashAlgorithmFactory.o:HashAlgorithmFactory.cpp
+	g++ -c HashAlgorithmFactory.cpp -o $(ARTIFACT_PATH)/HashAlgorithmFactory.o
 
-HashAlgorithmFactory.o:HashAlgorithmFactory.cpp
-	g++ -c HashAlgorithmFactory.cpp
+$(ARTIFACT_PATH)/main.o:main.cpp
+	g++ -c main.cpp -o $(ARTIFACT_PATH)/main.o
 
-main.o:main.cpp
-	g++ -c main.cpp
+check:
+ifeq ($(BUILD_PATH), $(wildcard $(BUILD_PATH)))
+	@echo "BUILD_PATH [OK]"
+else
+	mkdir $(abspath $(BUILD_PATH))
+endif
 
-clean:  
-	rm main.out $(objects)  
+ifeq ($(ARTIFACT_PATH), $(wildcard $(ARTIFACT_PATH)))
+	@echo "ARTIFACT_PATH [OK]"
+else
+	mkdir $(abspath $(ARTIFACT_PATH))
+endif
+
+clean:
+	rm $(ARTIFACT_PATH)/main.out $(objects)
